@@ -147,6 +147,7 @@ const PhoneInput = forwardRef<TextInput, PhoneInputProps>(
         nationalNumber: phone.nationalNumber,
         e164: phone.e164,
         isValid: phone.isValid,
+        numberType: phone.numberType,
       };
       onChange?.(item);
       onChangeValue?.(phone.formattedPhone);

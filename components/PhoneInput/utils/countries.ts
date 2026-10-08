@@ -1,10 +1,31 @@
-import CountriesDataEN from "../data/countries-en.json";
-import CountriesDataPT from "../data/countries-pt.json";
+import { getCountries as getSupportedCountries, getCountryCallingCode } from "libphonenumber-js/max";
+import CountryNamesEN from "../data/countries-en.json";
+import CountryNamesPT from "../data/countries-pt.json";
 import { CountriesLocale, CountryCodes, CountryCodeType } from "../types";
 
+type CountryName = { code: string; name: string };
+
+/** Builds the flag emoji from the two regional indicator symbols of the code. */
+export const getFlagEmoji = (code: string) =>
+  String.fromCodePoint(...[...code.toUpperCase()].map((char) => 0x1f1e6 + char.charCodeAt(0) - 65));
+
+const SUPPORTED_COUNTRIES = new Set<string>(getSupportedCountries());
+
+// Names come from the localized JSON (already sorted); dial codes and the list
+// of supported countries always come from libphonenumber-js.
+const buildCountries = (names: CountryName[]): CountryCodeType[] =>
+  names
+    .filter((el): el is { code: CountryCodes; name: string } => SUPPORTED_COUNTRIES.has(el.code))
+    .map(({ code, name }) => ({
+      code,
+      name,
+      dial_code: `+${getCountryCallingCode(code)}`,
+      emoji: getFlagEmoji(code),
+    }));
+
 const COUNTRIES_BY_LOCALE: Record<CountriesLocale, CountryCodeType[]> = {
-  EN: CountriesDataEN as CountryCodeType[],
-  PT: CountriesDataPT as CountryCodeType[],
+  EN: buildCountries(CountryNamesEN),
+  PT: buildCountries(CountryNamesPT),
 };
 
 export const getCountries = (locale: CountriesLocale = "EN"): CountryCodeType[] =>

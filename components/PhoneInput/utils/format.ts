@@ -1,10 +1,11 @@
+// "max" metadata: `isValid()` checks the digits against each country's numbering
+// plan. The default "min" metadata only checks the length.
 import {
   AsYouType,
-  CountryCode,
-  isSupportedCountry,
+  NumberType,
   parsePhoneNumberFromString,
   validatePhoneNumberLength,
-} from "libphonenumber-js";
+} from "libphonenumber-js/max";
 import { CountryCodes } from "../types";
 
 export interface FormattedPhone {
@@ -12,30 +13,22 @@ export interface FormattedPhone {
   nationalNumber: string;
   e164: string;
   isValid: boolean;
+  numberType: NumberType;
   /** Country detected from an international number ("+44..."), if any. */
   detectedCountry?: CountryCodes;
 }
 
 const onlyDigits = (text: string) => text.replace(/\D/g, "");
 
-const isSupported = (code: string): code is CountryCode => isSupportedCountry(code);
-
 export const formatPhoneNumber = (digits: string, code: CountryCodes, dialCode: string): FormattedPhone => {
-  if (!digits) return { formattedPhone: "", nationalNumber: "", e164: "", isValid: false };
-  if (!isSupported(code)) {
-    return {
-      formattedPhone: digits,
-      nationalNumber: digits,
-      e164: `${dialCode}${digits}`,
-      isValid: false,
-    };
-  }
+  if (!digits) return { formattedPhone: "", nationalNumber: "", e164: "", isValid: false, numberType: undefined };
   const parsed = parsePhoneNumberFromString(digits, code);
   return {
     formattedPhone: new AsYouType(code).input(digits),
     nationalNumber: digits,
     e164: parsed?.number ?? `${dialCode}${digits}`,
     isValid: parsed?.isValid() ?? false,
+    numberType: parsed?.getType(),
   };
 };
 
@@ -51,7 +44,8 @@ export const formatPhoneInput = (
 ): FormattedPhone | null => {
   // Pasted or autofilled international number: detect the country from it.
   if (text.trim().startsWith("+")) {
-    const asYouType = new AsYouType();
+    // `getNationalNumber` exists at runtime but is missing from the "max" typings.
+    const asYouType = new AsYouType() as AsYouType & { getNationalNumber(): string };
     asYouType.input(text);
     const detected = asYouType.getCountry();
     if (detected) {
@@ -70,7 +64,7 @@ export const formatPhoneInput = (
     digits = digits.slice(0, -1);
   }
 
-  if (digits && isSupported(code) && validatePhoneNumberLength(digits, code) === "TOO_LONG") {
+  if (digits && validatePhoneNumberLength(digits, code) === "TOO_LONG") {
     return null;
   }
 

@@ -16,4 +16,15 @@ This is a React Native component for handling phone number input with formatting
 * **Country Selection:** Supports selecting country codes from a list of countries.
 * **Customizable:** Fully customizable styles and input behavior.
 
+## Validation
+
+`onChange` gives you `isValid` and `numberType` (`"MOBILE"`, `"FIXED_LINE"`, ...). They come from [libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js) using its full ("max") metadata, so the digits are checked against each country's numbering plan, not just the length.
+
+Treat them as input checks, not proof that the number works:
+
+* **Valid is not the same as reachable.** A valid number can still be unassigned or belong to someone else. Confirm ownership with an SMS / OTP code if it matters.
+* **Numbering plans change.** The metadata is bundled with your app and only updates when you ship a new version, so a newly assigned prefix can be reported as invalid. Avoid hard-blocking submission on `isValid` alone, and validate again on your server with an up-to-date libphonenumber.
+
+Dial codes and the list of countries also come from libphonenumber-js; the bundled JSON files only provide the localized country names.
+
 ...

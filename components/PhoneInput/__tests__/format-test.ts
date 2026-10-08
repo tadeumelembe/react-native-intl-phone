@@ -1,4 +1,5 @@
 import { formatPhoneInput, parseInitialValue } from "../utils/format";
+import { getCountries as getSupportedCountries } from "libphonenumber-js/max";
 import { filterCountries, findCountry, getCountries, searchCountries } from "../utils/countries";
 
 describe("formatPhoneInput", () => {
@@ -8,6 +9,7 @@ describe("formatPhoneInput", () => {
       nationalNumber: "2015550123",
       e164: "+12015550123",
       isValid: true,
+      numberType: "FIXED_LINE_OR_MOBILE",
     });
   });
 
@@ -27,8 +29,24 @@ describe("formatPhoneInput", () => {
     expect(result?.e164).toBe("+447400123456");
   });
 
-  it("does not throw for countries libphonenumber-js does not support", () => {
-    expect(formatPhoneInput("12345", "AQ", "+672")?.formattedPhone).toBe("12345");
+  it("validates digits, not just length (max metadata)", () => {
+    // Right length for Mozambique, but 81 is not an assigned prefix ("min" metadata says valid).
+    expect(formatPhoneInput("811234567", "MZ", "+258")?.isValid).toBe(false);
+    expect(formatPhoneInput("841234567", "MZ", "+258")).toMatchObject({
+      isValid: true,
+      numberType: "MOBILE",
+    });
+  });
+
+  it("formats +1 countries with the area code in the national number", () => {
+    expect(formatPhoneInput("8765551234", "JM", "+1")).toMatchObject({
+      formattedPhone: "(876) 555-1234",
+      e164: "+18765551234",
+    });
+  });
+
+  it("detects +1 countries from a pasted number", () => {
+    expect(formatPhoneInput("+1 876 555 1234", "US", "+1")?.detectedCountry).toBe("JM");
   });
 
   it("returns an empty result for empty input", () => {
@@ -46,8 +64,21 @@ describe("parseInitialValue", () => {
 });
 
 describe("countries", () => {
-  it("falls back to another locale when a country is missing", () => {
-    expect(findCountry("AN", "EN")?.code).toBe("AN");
+  it("takes dial codes from libphonenumber-js", () => {
+    expect(findCountry("GY")?.dial_code).toBe("+592");
+    expect(findCountry("KZ")?.dial_code).toBe("+7");
+    expect(findCountry("KY")?.dial_code).toBe("+1");
+    expect(findCountry("JM")?.dial_code).toBe("+1");
+  });
+
+  it("builds flags from the country code", () => {
+    expect(findCountry("IQ", "PT")?.emoji).toBe("🇮🇶");
+  });
+
+  it("lists exactly the countries libphonenumber-js supports, in every locale", () => {
+    const supported = getSupportedCountries().sort();
+    expect(getCountries("EN").map((el) => el.code).sort()).toEqual(supported);
+    expect(getCountries("PT").map((el) => el.code).sort()).toEqual(supported);
   });
 
   it("filters, excludes and pins preferred countries", () => {
