@@ -7,85 +7,111 @@ import {
   ListRenderItemInfo,
   TextInput,
 } from "react-native";
-import React, { memo, useMemo, useState } from "react";
-import { BORDER_COLOR, BORDER_RADIUS } from "./utils/constants";
-import CountriesDataPT from "../../assets/coutry-codes.json";
-import CountriesDataEN from "../../assets/country-codes-en.json";
-import { CountriesLocale, CountryCodeType, DropDownProps } from "./types";
+import React, { memo, useCallback, useMemo, useState } from "react";
+import {
+  BORDER_COLOR,
+  BORDER_RADIUS,
+  DEFAULT_DROPDOWN_MAX_HEIGHT,
+  DIVIDER_COLOR,
+  SECONDARY_TEXT_COLOR,
+  SELECTED_ITEM_COLOR,
+} from "./utils/constants";
+import { searchCountries } from "./utils/countries";
+import { CountryCodeType, DropDownProps } from "./types";
 
-const DropDown = ({ selectItem, locale = "EN" }: DropDownProps) => {
-  const [searchTerm, setSearchItem] = useState("");
+const DropDown = ({
+  countries,
+  selectedCode,
+  onSelect,
+  top,
+  maxHeight = DEFAULT_DROPDOWN_MAX_HEIGHT,
+  showSearch = true,
+  searchPlaceholder = "Type your country...",
+  searchPlaceholderTextColor = SECONDARY_TEXT_COLOR,
+  emptyText = "Country not found",
+  renderItem: renderCustomItem,
+  dropDownStyle,
+  searchInputStyle,
+  itemStyle,
+  selectedItemStyle,
+  itemTextStyle,
+  itemDialCodeStyle,
+  emptyTextStyle,
+}: DropDownProps) => {
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const getCuntryData = (locale: CountriesLocale):CountryCodeType[] => {
-    let CountryData = CountriesDataEN as CountryCodeType[];
-    switch (locale) {
-      case "EN":
-        CountryData = CountriesDataEN as CountryCodeType[];
-        break;
-      case "PT":
-        CountryData = CountriesDataPT as CountryCodeType[];
-        break;
-      default:
-        CountryData = CountriesDataEN as CountryCodeType[];
-        break;
-    }
-    return CountryData;
-  };
+  const filteredCountries = useMemo(
+    () => searchCountries(countries, searchTerm),
+    [countries, searchTerm]
+  );
 
-  const CountriesData = getCuntryData(locale);
-  
-  const memorizedCoutryData = useMemo(() => {
-    if (!searchTerm) return CountriesData;
-    return CountriesData.filter((el) => {
-      return el.name
-        .toLocaleLowerCase()
-        .includes(searchTerm.toLocaleLowerCase());
-    });
-  }, [searchTerm]) as ArrayLike<CountryCodeType>;
-
-  const renderItem = ({ item }: ListRenderItemInfo<CountryCodeType>) => {
-    return (
-      <TouchableOpacity
-        key={`country-codes-${item.dial_code}`}
-        onPress={() => selectItem(item)}
-        style={styles.itemContainer}
-      >
-        <Text>{item.emoji}</Text>
-        <Text>{item.name}</Text>
-        <Text style={{ color: "#868686" }}>{item.dial_code}</Text>
-      </TouchableOpacity>
-    );
-  };
+  const renderItem = useCallback(
+    ({ item }: ListRenderItemInfo<CountryCodeType>) => {
+      const isSelected = item.code === selectedCode;
+      return (
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityState={{ selected: isSelected }}
+          accessibilityLabel={`${item.name} ${item.dial_code}`}
+          onPress={() => onSelect(item)}
+          style={[
+            styles.itemContainer,
+            itemStyle,
+            isSelected && [styles.selectedItem, selectedItemStyle],
+          ]}
+        >
+          {renderCustomItem ? (
+            renderCustomItem(item, isSelected)
+          ) : (
+            <>
+              <Text style={itemTextStyle}>{item.emoji}</Text>
+              <Text style={[styles.itemName, itemTextStyle]} numberOfLines={1}>
+                {item.name}
+              </Text>
+              <Text style={[styles.itemDialCode, itemDialCodeStyle]}>
+                {item.dial_code}
+              </Text>
+            </>
+          )}
+        </TouchableOpacity>
+      );
+    },
+    [
+      selectedCode,
+      onSelect,
+      renderCustomItem,
+      itemStyle,
+      selectedItemStyle,
+      itemTextStyle,
+      itemDialCodeStyle,
+    ]
+  );
 
   return (
-    <View style={styles.dropDown}>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Type your country..."
-        onChangeText={(text) => setSearchItem(text)}
-      />
+    <View style={[styles.dropDown, { top, maxHeight }, dropDownStyle]}>
+      {showSearch && (
+        <TextInput
+          style={[styles.searchInput, searchInputStyle]}
+          placeholder={searchPlaceholder}
+          placeholderTextColor={searchPlaceholderTextColor}
+          onChangeText={setSearchTerm}
+          value={searchTerm}
+          autoCorrect={false}
+          autoCapitalize="none"
+        />
+      )}
       <FlatList
-        data={memorizedCoutryData}
-        keyExtractor={(item) => item.code.toString()}
+        data={filteredCountries}
+        keyExtractor={(item) => item.code}
         renderItem={renderItem}
+        extraData={selectedCode}
         maxToRenderPerBatch={20}
         initialNumToRender={20}
-        contentContainerStyle={{
-          paddingHorizontal: 15,
-        }}
+        contentContainerStyle={styles.listContent}
         keyboardShouldPersistTaps="always"
+        nestedScrollEnabled
         ListEmptyComponent={
-          <View>
-            <Text
-              style={{
-                textAlign: "center",
-                fontWeight: "800",
-                marginVertical: 10,
-              }}
-            >
-              Country not found
-            </Text>
-          </View>
+          <Text style={[styles.emptyText, emptyTextStyle]}>{emptyText}</Text>
         }
       />
     </View>
@@ -101,12 +127,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: BORDER_COLOR,
     width: "100%",
-    maxHeight: 300,
     position: "absolute",
-    top: 55,
+    left: 0,
     zIndex: 10,
-    paddingVertical: 10,
-    paddingBottom: 0,
+    paddingTop: 10,
+    overflow: "hidden",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -114,21 +139,36 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
-
     elevation: 2,
   },
   searchInput: {
     paddingBottom: 10,
-    borderBottomWidth: 1,
     paddingHorizontal: 15,
-
-    borderColor: "#dedcdc",
+    borderBottomWidth: 1,
+    borderColor: DIVIDER_COLOR,
+  },
+  listContent: {
+    paddingVertical: 5,
   },
   itemContainer: {
     flexDirection: "row",
+    alignItems: "center",
     gap: 10,
     paddingVertical: 10,
-    borderColor: "#dedcdc",
-    borderBottomWidth: 0,
+    paddingHorizontal: 15,
+  },
+  selectedItem: {
+    backgroundColor: SELECTED_ITEM_COLOR,
+  },
+  itemName: {
+    flex: 1,
+  },
+  itemDialCode: {
+    color: SECONDARY_TEXT_COLOR,
+  },
+  emptyText: {
+    textAlign: "center",
+    fontWeight: "800",
+    marginVertical: 10,
   },
 });

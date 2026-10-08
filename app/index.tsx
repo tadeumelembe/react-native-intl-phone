@@ -1,10 +1,33 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import PhoneInput, { onChangeItem } from "@/components/PhoneInput";
+import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function Page() {
+  const [phone, setPhone] = useState<onChangeItem>();
+
   return (
     <View style={styles.container}>
-      <Text>Hello</Text>
-      <TextInput style={styles.inputContainer}/>
+      <Text>Default</Text>
+      <PhoneInput onChange={setPhone} placeholder="Phone number" />
+      <Text>
+        {phone?.e164 || "-"} {phone?.isValid ? "✅" : "❌"}
+      </Text>
+
+      <Text>Customized</Text>
+      <PhoneInput
+        defaultCode="MZ"
+        locale="PT"
+        codeType="Dial_Code"
+        showCode={false}
+        preferredCountries={["MZ", "PT", "BR", "AO"]}
+        searchPlaceholder="Procurar país..."
+        emptyText="País não encontrado"
+        containerStyle={styles.customContainer}
+        focusedContainerStyle={styles.customContainerFocused}
+        countryButtonTextStyle={styles.customCountryText}
+        inputStyle={styles.customInput}
+        dropDownStyle={styles.customDropDown}
+      />
     </View>
   );
 }
@@ -12,26 +35,29 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center",
     padding: 20,
     gap: 10,
   },
-
-  inputContainer: {
-    width: '100%',
-    height: 50,
-    padding: 10,
-    borderRadius: 20,
-    borderWidth:1,
-    overflow: "hidden",
-    gap: 10,
+  customContainer: {
+    height: 56,
+    borderRadius: 28,
+    borderColor: "#c7d2fe",
+    backgroundColor: "#eef2ff",
+    paddingHorizontal: 18,
   },
-  rowContainer: {
-    width: "100%",
-    height: 110,
-    backgroundColor: "#888888",
-    padding: 10,
-    borderRadius: 20,
+  customContainerFocused: {
+    borderColor: "#4f46e5",
+  },
+  customCountryText: {
+    fontWeight: "700",
+    color: "#4f46e5",
+  },
+  customInput: {
+    fontSize: 16,
+  },
+  customDropDown: {
+    borderRadius: 16,
+    borderColor: "#c7d2fe",
   },
 });
