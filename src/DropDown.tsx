@@ -7,7 +7,7 @@ import {
   ListRenderItemInfo,
   TextInput,
 } from "react-native";
-import React, { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import {
   BORDER_COLOR,
   BORDER_RADIUS,

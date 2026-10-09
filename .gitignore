@@ -19,6 +19,11 @@ web-build/
 expo-env.d.ts
 # @end expo-cli
 
-android/
-ios/
-web/
+example/android/
+example/ios/
+example/web/
+# library build output
+lib/
+
+# stale prebuild from before the example/ move
+/ios/

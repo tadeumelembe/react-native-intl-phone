@@ -1,4 +1,4 @@
-# React Native Phone Lib Input (On going project)
+# React Native Phone Lib Input
 
 This is a React Native component for handling phone number input with formatting and validation. This component leverages the libphonenumber-js library to format and validate phone numbers based on country codes.
 
@@ -15,6 +15,26 @@ This is a React Native component for handling phone number input with formatting
 * **Validation: Validates:** phone numbers to ensure they are valid for the selected country.
 * **Country Selection:** Supports selecting country codes from a list of countries.
 * **Customizable:** Fully customizable styles and input behavior.
+
+## Installation
+
+```sh
+npm install react-native-international-phone-input
+# or
+yarn add react-native-international-phone-input
+```
+
+Pure JS: no native code, works with Expo and bare React Native (iOS, Android, Web).
+
+## Usage
+
+```tsx
+import PhoneInput, { type onChangeItem } from "react-native-international-phone-input";
+
+const [phone, setPhone] = useState<onChangeItem>();
+
+<PhoneInput defaultCode="US" onChange={setPhone} placeholder="Phone number" />;
+```
 
 ## Custom country picker
 
@@ -57,3 +77,19 @@ Treat them as input checks, not proof that the number works:
 Dial codes and the list of countries also come from libphonenumber-js; the bundled JSON files only provide the localized country names.
 
 ...
+
+## Development
+
+The library lives in `src/`; `example/` is an Expo app that imports it straight from source.
+
+```sh
+yarn               # install root + example workspace
+yarn example start # run the example app
+yarn test          # unit tests
+yarn typecheck
+yarn build         # compile to lib/ with react-native-builder-bob
+```
+
+## License
+
+MIT

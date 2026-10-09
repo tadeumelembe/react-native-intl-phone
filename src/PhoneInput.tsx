@@ -6,7 +6,7 @@ import {
   Pressable,
   TextInputProps,
 } from "react-native";
-import React, {
+import {
   forwardRef,
   useCallback,
   useEffect,
