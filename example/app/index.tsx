@@ -21,7 +21,7 @@ export default function Page() {
         locale="PT"
         codeType="Dial_Code"
         showCode={false}
-        preferredCountries={["MZ", "PT", "BR", "AO"]}
+        countries={["MZ", "PT", "BR", "AO"]}
         searchPlaceholder="Procurar país..."
         emptyText="País não encontrado"
         containerStyle={styles.customContainer}
@@ -64,8 +64,8 @@ export default function Page() {
 
       <Text>Custom picker (TrueSheet)</Text>
       <PhoneInput
-        defaultCode="BR"
-        preferredCountries={["BR", "PT", "MZ"]}
+        defaultCode="AO"
+        preferredCountries={["AO","BR", "PT", "MZ"]}
         renderCountryPicker={(props) => <TrueSheetCountryPicker {...props} />}
       />
     </View>
