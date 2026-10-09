@@ -16,6 +16,35 @@ This is a React Native component for handling phone number input with formatting
 * **Country Selection:** Supports selecting country codes from a list of countries.
 * **Customizable:** Fully customizable styles and input behavior.
 
+## Custom country picker
+
+Pass `renderCountryPicker` to replace the built-in dropdown with your own modal, bottom sheet, etc. The component still owns the open state, the localized and filtered country list, and the formatting when the country changes:
+
+```tsx
+<PhoneInput
+  renderCountryPicker={({ visible, close, countries, selectedCountry, onSelect }) => (
+    <MyCountrySheet
+      open={visible}
+      onDismiss={close}
+      data={countries}          // respects locale, countries, excludedCountries, preferredCountries
+      selected={selectedCountry.code}
+      onPick={onSelect}         // updates the number and closes the picker
+    />
+  )}
+/>
+```
+
+It is called on every render, so pickers opened imperatively (e.g. `sheetRef.present()`) can react to `visible` in an effect. `searchCountries(countries, term)` is exported if you want the same accent-insensitive search.
+
+To handle the picker completely outside the component (e.g. navigate to a screen), use `onPressCountryButton` and pass the chosen country back through `countryCode`:
+
+```tsx
+<PhoneInput
+  countryCode={country}
+  onPressCountryButton={() => navigation.navigate("CountryPicker", { onPick: setCountry })}
+/>
+```
+
 ## Validation
 
 `onChange` gives you `isValid` and `numberType` (`"MOBILE"`, `"FIXED_LINE"`, ...). They come from [libphonenumber-js](https://gitlab.com/catamphetamine/libphonenumber-js) using its full ("max") metadata, so the digits are checked against each country's numbering plan, not just the length.

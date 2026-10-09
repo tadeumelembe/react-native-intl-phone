@@ -79,6 +79,8 @@ const PhoneInput = forwardRef<TextInput, PhoneInputProps>(
 
       renderCountryButton,
       renderCountryItem,
+      renderCountryPicker,
+      onPressCountryButton,
       ...textInputProps
     },
     ref
@@ -188,10 +190,18 @@ const PhoneInput = forwardRef<TextInput, PhoneInputProps>(
       onBlur?.(e);
     };
 
+    const closePicker = useCallback(() => setShowDropdown(false), []);
+
+    const handlePressCountryButton = () => {
+      if (onPressCountryButton) onPressCountryButton(selectedCountry);
+      else setShowDropdown((prevState) => !prevState);
+    };
+
     const isPickerDisabled = disabled || disableCountryPicker;
+    const isDropDownOpen = showDropdown && !renderCountryPicker;
 
     return (
-      <View style={[styles.wrapper, showDropdown && styles.wrapperOpen, style]}>
+      <View style={[styles.wrapper, isDropDownOpen && styles.wrapperOpen, style]}>
         <View
           onLayout={({ nativeEvent }) => setInputHeight(nativeEvent.layout.height)}
           style={[
@@ -207,7 +217,7 @@ const PhoneInput = forwardRef<TextInput, PhoneInputProps>(
             accessibilityState={{ disabled: isPickerDisabled, expanded: showDropdown }}
             disabled={isPickerDisabled}
             hitSlop={8}
-            onPress={() => setShowDropdown((prevState) => !prevState)}
+            onPress={handlePressCountryButton}
             style={countryButtonStyle}
           >
             {renderCountryButton ? (
@@ -238,7 +248,14 @@ const PhoneInput = forwardRef<TextInput, PhoneInputProps>(
             />
           </View>
         </View>
-        {showDropdown && (
+        {renderCountryPicker?.({
+          visible: showDropdown,
+          close: closePicker,
+          countries: countryList,
+          selectedCountry,
+          onSelect: handleSelectCountry,
+        })}
+        {isDropDownOpen && (
           <DropDown
             countries={countryList}
             selectedCode={selectedCountry.code}

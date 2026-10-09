@@ -53,6 +53,16 @@ export interface DropDownProps extends DropDownStyles {
   renderItem?: (country: CountryCodeType, isSelected: boolean) => ReactNode;
 }
 
+export interface CountryPickerRenderProps {
+  visible: boolean;
+  close: () => void;
+  /** Countries in the selected locale, after `countries` / `excludedCountries` / `preferredCountries`. */
+  countries: CountryCodeType[];
+  selectedCountry: CountryCodeType;
+  /** Selects the country (reformatting the number and firing the change callbacks) and closes the picker. */
+  onSelect: (country: CountryCodeType) => void;
+}
+
 export interface PhoneInputProps
   extends DropDownStyles,
     Omit<
@@ -116,4 +126,14 @@ export interface PhoneInputProps
   renderCountryButton?: (country: CountryCodeType, isOpen: boolean) => ReactNode;
   /** Replace the content of each dropdown row. */
   renderCountryItem?: (country: CountryCodeType, isSelected: boolean) => ReactNode;
+  /**
+   * Replace the whole country picker (modal, bottom sheet, ...). Called on every
+   * render, use `visible` to show or hide it. The built-in dropdown props are ignored.
+   */
+  renderCountryPicker?: (props: CountryPickerRenderProps) => ReactNode;
+  /**
+   * Take over the country button press, e.g. to navigate to your own screen.
+   * No picker is opened; set the country back through `countryCode`.
+   */
+  onPressCountryButton?: (country: CountryCodeType) => void;
 }

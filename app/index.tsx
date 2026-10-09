@@ -1,6 +1,7 @@
 import PhoneInput, { onChangeItem } from "@/components/PhoneInput";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Page() {
   const [phone, setPhone] = useState<onChangeItem>();
@@ -27,6 +28,37 @@ export default function Page() {
         countryButtonTextStyle={styles.customCountryText}
         inputStyle={styles.customInput}
         dropDownStyle={styles.customDropDown}
+      />
+
+      <Text>Custom picker (modal)</Text>
+      <PhoneInput
+        defaultCode="PT"
+        renderCountryPicker={({ visible, close, countries, selectedCountry, onSelect }) => (
+          <Modal visible={visible} animationType="slide" onRequestClose={close}>
+            <SafeAreaView style={styles.modal}>
+              <Pressable onPress={close} style={styles.modalClose}>
+                <Text>Close</Text>
+              </Pressable>
+              <FlatList
+                data={countries}
+                keyExtractor={(item) => item.code}
+                renderItem={({ item }) => (
+                  <Pressable
+                    onPress={() => onSelect(item)}
+                    style={[
+                      styles.modalItem,
+                      item.code === selectedCountry.code && styles.modalItemSelected,
+                    ]}
+                  >
+                    <Text>
+                      {item.emoji} {item.name} ({item.dial_code})
+                    </Text>
+                  </Pressable>
+                )}
+              />
+            </SafeAreaView>
+          </Modal>
+        )}
       />
     </View>
   );
@@ -59,5 +91,19 @@ const styles = StyleSheet.create({
   customDropDown: {
     borderRadius: 16,
     borderColor: "#c7d2fe",
+  },
+  modal: {
+    flex: 1,
+  },
+  modalClose: {
+    alignSelf: "flex-end",
+    padding: 16,
+  },
+  modalItem: {
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+  },
+  modalItemSelected: {
+    backgroundColor: "#eef2ff",
   },
 });
