@@ -7647,7 +7647,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.43.1"
     typescript: "npm:~6.0.3"
   peerDependencies:
-    react: "*"
+    react: ">=17"
     react-native: "*"
   languageName: unknown
   linkType: soft

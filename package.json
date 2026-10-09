@@ -58,7 +58,7 @@
     "libphonenumber-js": "^1.11.3"
   },
   "peerDependencies": {
-    "react": "*",
+    "react": ">=17",
     "react-native": "*"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-# React Native Phone Lib Input
+# react-native-intl-phone
 
 This is a React Native component for handling phone number input with formatting and validation. This component leverages the libphonenumber-js library to format and validate phone numbers based on country codes.
 
@@ -12,7 +12,7 @@ This is a React Native component for handling phone number input with formatting
 ## Features
 
 * **Automatic Formatting:** Automatically formats phone numbers as users type based on the selected country code.
-* **Validation: Validates:** phone numbers to ensure they are valid for the selected country.
+* **Validation:** Validates phone numbers to ensure they are valid for the selected country.
 * **Country Selection:** Supports selecting country codes from a list of countries.
 * **Customizable:** Fully customizable styles and input behavior.
 
@@ -170,8 +170,6 @@ Treat them as input checks, not proof that the number works:
 * **Numbering plans change.** The metadata is bundled with your app and only updates when you ship a new version, so a newly assigned prefix can be reported as invalid. Avoid hard-blocking submission on `isValid` alone, and validate again on your server with an up-to-date libphonenumber.
 
 Dial codes and the list of countries also come from libphonenumber-js; the bundled JSON files only provide the localized country names.
-
-...
 
 ## Development
 

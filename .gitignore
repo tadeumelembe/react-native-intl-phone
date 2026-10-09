@@ -27,3 +27,6 @@ lib/
 
 # stale prebuild from before the example/ move
 /ios/
+
+# yarn
+.yarn/install-state.gz
