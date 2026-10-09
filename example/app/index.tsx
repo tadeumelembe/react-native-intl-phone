@@ -2,6 +2,7 @@ import PhoneInput, { onChangeItem } from "react-native-intl-phone";
 import { useState } from "react";
 import { FlatList, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import TrueSheetCountryPicker from "../components/TrueSheetCountryPicker";
 
 export default function Page() {
   const [phone, setPhone] = useState<onChangeItem>();
@@ -59,6 +60,13 @@ export default function Page() {
             </SafeAreaView>
           </Modal>
         )}
+      />
+
+      <Text>Custom picker (TrueSheet)</Text>
+      <PhoneInput
+        defaultCode="BR"
+        preferredCountries={["BR", "PT", "MZ"]}
+        renderCountryPicker={(props) => <TrueSheetCountryPicker {...props} />}
       />
     </View>
   );

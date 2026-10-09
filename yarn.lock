@@ -2449,6 +2449,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lodev09/react-native-true-sheet@npm:^3.11.18":
+  version: 3.11.18
+  resolution: "@lodev09/react-native-true-sheet@npm:3.11.18"
+  peerDependencies:
+    "@radix-ui/react-dialog": ">=1"
+    "@radix-ui/react-presence": ">=1"
+    "@react-navigation/core": ">=7"
+    react: "*"
+    react-native: "*"
+    react-native-reanimated: ">=4"
+    react-native-worklets: "*"
+  peerDependenciesMeta:
+    "@radix-ui/react-dialog":
+      optional: true
+    "@radix-ui/react-presence":
+      optional: true
+    "@react-navigation/core":
+      optional: true
+    react-native-reanimated:
+      optional: true
+    react-native-worklets:
+      optional: true
+  checksum: 10c0/e42d284e9c3d2d2a129acbd81bba8375ca3329d12b81902962f6812829195c38401111dc8a116e07ca0a76173aca01f6c565f45775e72658d7fbfca6116f8546
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -7583,6 +7609,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.20.0"
     "@expo/vector-icons": "npm:^15.0.2"
+    "@lodev09/react-native-true-sheet": "npm:^3.11.18"
     "@react-navigation/native": "npm:^6.0.2"
     "@types/react": "npm:~19.2.4"
     expo: "npm:^57.0.0"

@@ -149,7 +149,7 @@ Pass `renderCountryPicker` to replace the built-in dropdown with your own modal,
 />
 ```
 
-It is called on every render, so pickers opened imperatively (e.g. `sheetRef.present()`) can react to `visible` in an effect. `searchCountries(countries, term)` is exported if you want the same accent-insensitive search.
+It is called on every render, so pickers opened imperatively (e.g. `sheetRef.present()`) can react to `visible` in an effect. See [`example/components/TrueSheetCountryPicker.tsx`](example/components/TrueSheetCountryPicker.tsx) for a native bottom sheet built with [TrueSheet](https://github.com/lodev09/react-native-true-sheet). `searchCountries(countries, term)` is exported if you want the same accent-insensitive search.
 
 To handle the picker completely outside the component (e.g. navigate to a screen), use `onPressCountryButton` and pass the chosen country back through `countryCode`:
 
