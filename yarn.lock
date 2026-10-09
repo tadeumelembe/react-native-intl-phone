@@ -7577,9 +7577,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-international-phone-input-example@workspace:example":
+"react-native-intl-phone-example@workspace:example":
   version: 0.0.0-use.local
-  resolution: "react-native-international-phone-input-example@workspace:example"
+  resolution: "react-native-intl-phone-example@workspace:example"
   dependencies:
     "@babel/core": "npm:^7.20.0"
     "@expo/vector-icons": "npm:^15.0.2"
@@ -7597,7 +7597,7 @@ __metadata:
     react: "npm:19.2.3"
     react-dom: "npm:19.2.3"
     react-native: "npm:0.86.3"
-    react-native-international-phone-input: "workspace:*"
+    react-native-intl-phone: "workspace:*"
     react-native-safe-area-context: "npm:~5.7.0"
     react-native-screens: "npm:~4.26.0"
     react-native-web: "npm:^0.21.2"
@@ -7605,9 +7605,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"react-native-international-phone-input@workspace:*, react-native-international-phone-input@workspace:.":
+"react-native-intl-phone@workspace:*, react-native-intl-phone@workspace:.":
   version: 0.0.0-use.local
-  resolution: "react-native-international-phone-input@workspace:."
+  resolution: "react-native-intl-phone@workspace:."
   dependencies:
     "@react-native/babel-preset": "npm:0.86.3"
     "@react-native/jest-preset": "npm:0.86.3"

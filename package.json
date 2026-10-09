@@ -1,5 +1,5 @@
 {
-  "name": "react-native-international-phone-input",
+  "name": "react-native-intl-phone",
   "version": "0.1.0",
   "description": "International phone number input for React Native with country picker, as-you-type formatting and validation powered by libphonenumber-js",
   "main": "./lib/module/index.js",
@@ -21,7 +21,7 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "example": "yarn workspace react-native-international-phone-input-example",
+    "example": "yarn workspace react-native-intl-phone-example",
     "build": "bob build",
     "clean": "rm -rf lib",
     "typecheck": "tsc",

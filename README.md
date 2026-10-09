@@ -19,9 +19,9 @@ This is a React Native component for handling phone number input with formatting
 ## Installation
 
 ```sh
-npm install react-native-international-phone-input
+npm install react-native-intl-phone
 # or
-yarn add react-native-international-phone-input
+yarn add react-native-intl-phone
 ```
 
 Pure JS: no native code, works with Expo and bare React Native (iOS, Android, Web).
@@ -29,7 +29,7 @@ Pure JS: no native code, works with Expo and bare React Native (iOS, Android, We
 ## Usage
 
 ```tsx
-import PhoneInput, { type onChangeItem } from "react-native-international-phone-input";
+import PhoneInput, { type onChangeItem } from "react-native-intl-phone";
 
 const [phone, setPhone] = useState<onChangeItem>();
 

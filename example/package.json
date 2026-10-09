@@ -1,5 +1,5 @@
 {
-  "name": "react-native-international-phone-input-example",
+  "name": "react-native-intl-phone-example",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "private": true,
@@ -24,7 +24,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-native": "0.86.3",
-    "react-native-international-phone-input": "workspace:*",
+    "react-native-intl-phone": "workspace:*",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "~4.26.0",
     "react-native-web": "^0.21.2"

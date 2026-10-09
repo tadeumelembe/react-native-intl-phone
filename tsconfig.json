@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "react-native-international-phone-input": ["./src/index"]
+      "react-native-intl-phone": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

@@ -1,4 +1,4 @@
-import PhoneInput, { onChangeItem } from "react-native-international-phone-input";
+import PhoneInput, { onChangeItem } from "react-native-intl-phone";
 import { useState } from "react";
 import { FlatList, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
