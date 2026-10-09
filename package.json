@@ -43,14 +43,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tadeumelembe/react-native-international-phone-input.git"
+    "url": "git+https://github.com/tadeumelembe/react-native-intl-phone.git"
   },
   "author": "Tadeu Melembe <tadeumelembe@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tadeumelembe/react-native-international-phone-input/issues"
+    "url": "https://github.com/tadeumelembe/react-native-intl-phone/issues"
   },
-  "homepage": "https://github.com/tadeumelembe/react-native-international-phone-input#readme",
+  "homepage": "https://github.com/tadeumelembe/react-native-intl-phone#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
