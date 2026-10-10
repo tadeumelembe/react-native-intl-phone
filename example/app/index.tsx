@@ -1,6 +1,6 @@
 import PhoneInput, { onChangeItem } from "react-native-intl-phone";
 import { useState } from "react";
-import { FlatList, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TrueSheetCountryPicker from "../components/TrueSheetCountryPicker";
 
@@ -8,7 +8,7 @@ export default function Page() {
   const [phone, setPhone] = useState<onChangeItem>();
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
       <Text>Default</Text>
       <PhoneInput onChange={setPhone} placeholder="Phone number" />
       <Text>
@@ -68,7 +68,7 @@ export default function Page() {
         preferredCountries={["AO","BR", "PT", "MZ"]}
         renderCountryPicker={(props) => <TrueSheetCountryPicker {...props} />}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
   },
   modal: {
     flex: 1,
+    paddingTop: 20,
   },
   modalClose: {
     alignSelf: "flex-end",
