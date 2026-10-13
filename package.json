@@ -1,6 +1,6 @@
 {
   "name": "react-native-intl-phone",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "International phone number input for React Native with country picker, as-you-type formatting and validation powered by libphonenumber-js",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
