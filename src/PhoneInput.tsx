@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import {
   forwardRef,
+  Fragment,
   useCallback,
   useEffect,
   useMemo,
@@ -201,7 +202,25 @@ const PhoneInput = forwardRef<TextInput, PhoneInputProps>(
     const isDropDownOpen = showDropdown && !renderCountryPicker;
 
     return (
-      <View style={[styles.wrapper, isDropDownOpen && styles.wrapperOpen, style]}>
+      <View
+        // Android only delivers touches to children inside their parent's
+        // bounds, so while the absolutely positioned dropdown is open the
+        // wrapper is stretched over it (padding offset by a negative margin, so
+        // surrounding layout doesn't move). box-none lets touches on the empty
+        // part of that area reach whatever is underneath.
+        pointerEvents="box-none"
+        style={[
+          styles.wrapper,
+          isDropDownOpen && [
+            styles.wrapperOpen,
+            {
+              paddingBottom: dropDownOffset + dropDownMaxHeight,
+              marginBottom: -(dropDownOffset + dropDownMaxHeight),
+            },
+          ],
+          style,
+        ]}
+      >
         <View
           onLayout={({ nativeEvent }) => setInputHeight(nativeEvent.layout.height)}
           style={[
