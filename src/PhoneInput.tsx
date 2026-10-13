@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import {
   forwardRef,
-  Fragment,
   useCallback,
   useEffect,
   useMemo,
