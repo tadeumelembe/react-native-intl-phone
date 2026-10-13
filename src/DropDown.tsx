@@ -2,12 +2,11 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
+  ScrollView,
   TouchableOpacity,
-  ListRenderItemInfo,
   TextInput,
 } from "react-native";
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import {
   BORDER_COLOR,
   BORDER_RADIUS,
@@ -18,6 +17,54 @@ import {
 } from "./utils/constants";
 import { searchCountries } from "./utils/countries";
 import { CountryCodeType, DropDownProps } from "./types";
+
+type DropDownItemProps = Pick<
+  DropDownProps,
+  "onSelect" | "itemStyle" | "selectedItemStyle" | "itemTextStyle" | "itemDialCodeStyle"
+> & {
+  item: CountryCodeType;
+  isSelected: boolean;
+  renderCustomItem: DropDownProps["renderItem"];
+};
+
+const DropDownItem = memo(
+  ({
+    item,
+    isSelected,
+    onSelect,
+    renderCustomItem,
+    itemStyle,
+    selectedItemStyle,
+    itemTextStyle,
+    itemDialCodeStyle,
+  }: DropDownItemProps) => (
+    <TouchableOpacity
+      accessibilityRole="button"
+      accessibilityState={{ selected: isSelected }}
+      accessibilityLabel={`${item.name} ${item.dial_code}`}
+      onPress={() => onSelect(item)}
+      style={[
+        styles.itemContainer,
+        itemStyle,
+        isSelected && [styles.selectedItem, selectedItemStyle],
+      ]}
+    >
+      {renderCustomItem ? (
+        renderCustomItem(item, isSelected)
+      ) : (
+        <>
+          <Text style={itemTextStyle}>{item.emoji}</Text>
+          <Text style={[styles.itemName, itemTextStyle]} numberOfLines={1}>
+            {item.name}
+          </Text>
+          <Text style={[styles.itemDialCode, itemDialCodeStyle]}>
+            {item.dial_code}
+          </Text>
+        </>
+      )}
+    </TouchableOpacity>
+  )
+);
 
 const DropDown = ({
   countries,
@@ -45,48 +92,6 @@ const DropDown = ({
     [countries, searchTerm]
   );
 
-  const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<CountryCodeType>) => {
-      const isSelected = item.code === selectedCode;
-      return (
-        <TouchableOpacity
-          accessibilityRole="button"
-          accessibilityState={{ selected: isSelected }}
-          accessibilityLabel={`${item.name} ${item.dial_code}`}
-          onPress={() => onSelect(item)}
-          style={[
-            styles.itemContainer,
-            itemStyle,
-            isSelected && [styles.selectedItem, selectedItemStyle],
-          ]}
-        >
-          {renderCustomItem ? (
-            renderCustomItem(item, isSelected)
-          ) : (
-            <>
-              <Text style={itemTextStyle}>{item.emoji}</Text>
-              <Text style={[styles.itemName, itemTextStyle]} numberOfLines={1}>
-                {item.name}
-              </Text>
-              <Text style={[styles.itemDialCode, itemDialCodeStyle]}>
-                {item.dial_code}
-              </Text>
-            </>
-          )}
-        </TouchableOpacity>
-      );
-    },
-    [
-      selectedCode,
-      onSelect,
-      renderCustomItem,
-      itemStyle,
-      selectedItemStyle,
-      itemTextStyle,
-      itemDialCodeStyle,
-    ]
-  );
-
   return (
     <View style={[styles.dropDown, { top, maxHeight }, dropDownStyle]}>
       {showSearch && (
@@ -100,20 +105,31 @@ const DropDown = ({
           autoCapitalize="none"
         />
       )}
-      <FlatList
-        data={filteredCountries}
-        keyExtractor={(item) => item.code}
-        renderItem={renderItem}
-        extraData={selectedCode}
-        maxToRenderPerBatch={20}
-        initialNumToRender={20}
+      {/* A plain ScrollView (not FlatList) so the dropdown can live inside a
+          parent ScrollView without the nested VirtualizedList warning. */}
+      <ScrollView
         contentContainerStyle={styles.listContent}
         keyboardShouldPersistTaps="always"
         nestedScrollEnabled
-        ListEmptyComponent={
+      >
+        {filteredCountries.length === 0 ? (
           <Text style={[styles.emptyText, emptyTextStyle]}>{emptyText}</Text>
-        }
-      />
+        ) : (
+          filteredCountries.map((item) => (
+            <DropDownItem
+              key={item.code}
+              item={item}
+              isSelected={item.code === selectedCode}
+              onSelect={onSelect}
+              renderCustomItem={renderCustomItem}
+              itemStyle={itemStyle}
+              selectedItemStyle={selectedItemStyle}
+              itemTextStyle={itemTextStyle}
+              itemDialCodeStyle={itemDialCodeStyle}
+            />
+          ))
+        )}
+      </ScrollView>
     </View>
   );
 };
